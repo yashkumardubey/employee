@@ -8,6 +8,7 @@ import com.employee.entity.Employee;
 import com.employee.entity.EmployeeClone;
 import com.employee.response.StandardResponse;
 
+@SuppressWarnings("unused")
 public interface EmployeeService {
 	
 	 StandardResponse addEmployee(Employee employee);

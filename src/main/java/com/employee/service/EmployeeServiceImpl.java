@@ -30,6 +30,7 @@ import ch.qos.logback.classic.Logger;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
+@SuppressWarnings("unused")
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 	
