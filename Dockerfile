@@ -3,15 +3,17 @@
 # Stage 1: Build the application
 FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
 
+# Install git
+RUN apk add --no-cache git
+
 # Set working directory
 WORKDIR /app
 
-# Copy pom.xml and download dependencies (caching layer)
-COPY pom.xml .
-RUN mvn dependency:go-offline -B
+# Clone the repository from GitHub
+RUN git clone https://github.com/yashkumardubey/employee.git .
 
-# Copy source code
-COPY src ./src
+# Update credentials in application.properties
+RUN sed -i 's/AUTH_USERNAME:dipali/AUTH_USERNAME:yash/g' src/main/resources/application.properties
 
 # Build the application (skip tests for faster build, run them separately if needed)
 RUN mvn clean package -DskipTests

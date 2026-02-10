@@ -35,7 +35,7 @@ services:
       DATABASE_URL: jdbc:postgresql://postgres:5432/postgresdb
       DATABASE_USERNAME: postgres
       DATABASE_PASSWORD: root
-      AUTH_USERNAME: dipali
+      AUTH_USERNAME: yash
       AUTH_PASSWORD: "1234"
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "true"
