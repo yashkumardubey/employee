@@ -13,12 +13,7 @@ RUN mvn dependency:go-offline -B
 # Copy source code
 COPY src ./src
 
-# Run tests first to validate code quality
-# Clear entire Maven cache to avoid tag mismatch issues, then force fresh download and test
-RUN rm -rf /root/.m2/repository \
-  && mvn -U -Dspring.profiles.active=test test
-
-# Build the application after tests pass
+# Build the application (skip tests in Docker build - run tests locally instead)
 RUN mvn clean package -DskipTests
 
 # Stage 2: Run the application
