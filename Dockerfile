@@ -16,7 +16,7 @@ RUN git clone https://github.com/yashkumardubey/employee.git .
 RUN sed -i 's/AUTH_USERNAME:dipali/AUTH_USERNAME:yash/g' src/main/resources/application.properties
 
 # Run tests first to validate code quality
-RUN mvn test
+RUN mvn -Dspring.profiles.active=test test
 
 # Build the application after tests pass
 RUN mvn clean package -DskipTests
