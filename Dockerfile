@@ -15,7 +15,10 @@ RUN git clone https://github.com/yashkumardubey/employee.git .
 # Update credentials in application.properties
 RUN sed -i 's/AUTH_USERNAME:dipali/AUTH_USERNAME:yash/g' src/main/resources/application.properties
 
-# Build the application (skip tests for faster build, run them separately if needed)
+# Run tests first to validate code quality
+RUN mvn test
+
+# Build the application after tests pass
 RUN mvn clean package -DskipTests
 
 # Stage 2: Run the application
