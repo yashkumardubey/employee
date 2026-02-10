@@ -3,20 +3,20 @@
 # Stage 1: Build the application
 FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
 
-# Install git
-RUN apk add --no-cache git
-
 # Set working directory
 WORKDIR /app
 
-# Clone the repository from GitHub
-RUN git clone https://github.com/yashkumardubey/employee.git .
+# Copy pom.xml and download dependencies (caching layer)
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
 
-# Update credentials in application.properties
-RUN sed -i 's/AUTH_USERNAME:dipali/AUTH_USERNAME:yash/g' src/main/resources/application.properties
+# Copy source code
+COPY src ./src
 
 # Run tests first to validate code quality
-RUN mvn -Dspring.profiles.active=test test
+# Clear entire Maven cache to avoid tag mismatch issues, then force fresh download and test
+RUN rm -rf /root/.m2/repository \
+  && mvn -U -Dspring.profiles.active=test test
 
 # Build the application after tests pass
 RUN mvn clean package -DskipTests
