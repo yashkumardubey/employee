@@ -5,10 +5,8 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 import com.employee.entity.Employee;
-import com.employee.entity.EmployeeClone;
 import com.employee.response.StandardResponse;
 
-@SuppressWarnings("unused")
 public interface EmployeeService {
 	
 	 StandardResponse addEmployee(Employee employee);
@@ -19,7 +17,11 @@ public interface EmployeeService {
 	 
 	 void deleteEmployeeByFname(String fname);
 	 
-	 ResponseEntity<?> getEmployeeIdAndFname();
+	 List<Employee> getEmployeesByFname(String fname);
+	 
+	 List<Employee> getEmployeeIdAndFname();
+	 
+	 ResponseEntity<?> getEmployeeIdAndFnameAsResponse();
 	 
 	 //xml
 	 

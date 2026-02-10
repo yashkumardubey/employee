@@ -1,0 +1,55 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: employee-postgres
+    environment:
+      POSTGRES_DB: postgresdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - employee-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Spring Boot Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: employee-app
+    ports:
+      - "8081:8080"
+    environment:
+      # Override database connection for Docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgresdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      DATABASE_URL: jdbc:postgresql://postgres:5432/postgresdb
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: root
+      AUTH_USERNAME: dipali
+      AUTH_PASSWORD: "1234"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - employee-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  employee-network:
+    driver: bridge

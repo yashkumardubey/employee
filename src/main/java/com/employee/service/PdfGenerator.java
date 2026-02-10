@@ -56,22 +56,22 @@ public class PdfGenerator {
 	    // Adding Cell to table
 	    cell.setPhrase(new Phrase("ID", font));
 	    table.addCell(cell);
-	    cell.setPhrase(new Phrase("Emp Name", font));
-	    table.addCell(cell);
-	    cell.setPhrase(new Phrase("Email", font));
-	    table.addCell(cell);
-	   
-	    // Iterating the list of students
-	    for (Employee emp: empList) {
-	      // Adding student id
-	      table.addCell(String.valueOf(emp.getId()));
-	      // Adding student name
-	      table.addCell(emp.getFname());
-	      // Adding student email
-	      table.addCell(emp.getEmpid());
-	     
-	    }
-	    // Adding the created table to the document
+    cell.setPhrase(new Phrase("Employee Name", font));
+    table.addCell(cell);
+    cell.setPhrase(new Phrase("Employee ID", font));
+    table.addCell(cell);
+   
+    // Iterating the list of employees
+    for (Employee emp: empList) {
+      // Adding employee id
+      table.addCell(String.valueOf(emp.getId()));
+      // Adding employee name
+      table.addCell(emp.getFname());
+      // Adding employee empid
+      table.addCell(emp.getEmpid());
+     
+    }
+    // Adding the created table to the document
 	    document.add(table);
 	    // Closing the document
 	    document.close();

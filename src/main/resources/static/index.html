@@ -3,11 +3,511 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Management</title>
+    <title>Employee Management System</title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+        .btn-info:hover {
+            background: #138496;
+        }
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+        .employee-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .employee-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        .employee-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .employee-table tr:hover {
+            background: #f8f9ff;
+        }
+        .message {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .auth-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-card h3 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+        .stat-card p {
+            opacity: 0.9;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to Employee Management Application</h1>
-    <script src="/js/app.js"></script>
+    <div class="container">
+        <div class="header">
+            <h1>🏢 Employee Management System</h1>
+            <p>Manage your workforce efficiently</p>
+        </div>
+        
+        <div class="content">
+            <!-- Stats -->
+            <div class="stats">
+                <div class="stat-card">
+                    <h3 id="totalEmployees">0</h3>
+                    <p>Total Employees</p>
+                </div>
+            </div>
+
+            <!-- Auth Section -->
+            <div class="auth-section">
+                <h3>Authentication (Required for Add/Update/Delete)</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Username:</label>
+                        <input type="text" id="authUsername" value="dipali" placeholder="Enter username">
+                    </div>
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" id="authPassword" value="1234" placeholder="Enter password">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message Area -->
+            <div id="messageArea"></div>
+
+            <!-- Add Employee Section -->
+            <div class="section">
+                <h2>➕ Add New Employee</h2>
+                <form id="addEmployeeForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Employee ID *</label>
+                            <input type="text" id="empid" required placeholder="e.g., EMP001" minlength="3" maxlength="20">
+                        </div>
+                        <div class="form-group">
+                            <label>First Name *</label>
+                            <input type="text" id="fname" required placeholder="e.g., John" minlength="2" maxlength="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name *</label>
+                            <input type="text" id="lname" required placeholder="e.g., Doe" minlength="2" maxlength="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <input type="email" id="email" required placeholder="e.g., john.doe@company.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Salary *</label>
+                            <input type="number" id="salary" required placeholder="e.g., 50000" min="0">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Employee</button>
+                    <button type="reset" class="btn btn-warning">Clear Form</button>
+                </form>
+            </div>
+
+            <!-- View Employees Section -->
+            <div class="section">
+                <h2>👥 Employee List</h2>
+                <div class="export-buttons">
+                    <button onclick="loadEmployees()" class="btn btn-success">🔄 Refresh List</button>
+                    <button onclick="exportToPDF()" class="btn btn-info">📄 Export to PDF</button>
+                    <button onclick="exportToExcel()" class="btn btn-success">📊 Export to Excel</button>
+                </div>
+                <div id="employeeList"></div>
+            </div>
+
+            <!-- Search Employee Section -->
+            <div class="section">
+                <h2>🔍 Search Employee</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Search by Employee ID:</label>
+                        <input type="text" id="searchEmpId" placeholder="e.g., EMP001">
+                        <button onclick="searchByEmpId()" class="btn btn-primary">Search by ID</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Search by First Name:</label>
+                        <input type="text" id="searchFname" placeholder="e.g., John">
+                        <button onclick="searchByName()" class="btn btn-primary">Search by Name</button>
+                    </div>
+                </div>
+                <div id="searchResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+
+        // Get auth credentials
+        function getAuthHeader() {
+            const username = document.getElementById('authUsername').value;
+            const password = document.getElementById('authPassword').value;
+            return 'Basic ' + btoa(username + ':' + password);
+        }
+
+        // Show message
+        function showMessage(message, type = 'success') {
+            const messageArea = document.getElementById('messageArea');
+            messageArea.innerHTML = `<div class="message ${type}">${message}</div>`;
+            setTimeout(() => messageArea.innerHTML = '', 5000);
+        }
+
+        // Load all employees
+        async function loadEmployees() {
+            try {
+                const response = await fetch(API_BASE);
+                const employees = await response.json();
+                
+                document.getElementById('totalEmployees').textContent = employees.length;
+                
+                if (employees.length === 0) {
+                    document.getElementById('employeeList').innerHTML = '<p>No employees found.</p>';
+                    return;
+                }
+
+                let html = `
+                    <table class="employee-table">
+                        <thead>
+                            <tr>
+                                <th>Employee ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Salary</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                employees.forEach(emp => {
+                    html += `
+                        <tr>
+                            <td>${emp.empid}</td>
+                            <td>${emp.fname}</td>
+                            <td>${emp.lname}</td>
+                            <td>${emp.email}</td>
+                            <td>$${emp.salary.toLocaleString()}</td>
+                            <td>
+                                <button onclick="deleteEmployee('${emp.fname}')" class="btn btn-danger">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                html += '</tbody></table>';
+                document.getElementById('employeeList').innerHTML = html;
+            } catch (error) {
+                showMessage('Error loading employees: ' + error.message, 'error');
+            }
+        }
+
+        // Add employee
+        document.getElementById('addEmployeeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const employee = {
+                empid: document.getElementById('empid').value,
+                fname: document.getElementById('fname').value,
+                lname: document.getElementById('lname').value,
+                email: document.getElementById('email').value,
+                salary: parseFloat(document.getElementById('salary').value)
+            };
+
+            try {
+                const response = await fetch(API_BASE, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': getAuthHeader()
+                    },
+                    body: JSON.stringify(employee)
+                });
+
+                if (response.ok) {
+                    showMessage('Employee added successfully!', 'success');
+                    document.getElementById('addEmployeeForm').reset();
+                    loadEmployees();
+                } else {
+                    const error = await response.text();
+                    showMessage('Error: ' + error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error adding employee: ' + error.message, 'error');
+            }
+        });
+
+        // Delete employee
+        async function deleteEmployee(fname) {
+            if (!confirm(`Are you sure you want to delete employee ${fname}?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/${fname}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': getAuthHeader()
+                    }
+                });
+
+                if (response.ok) {
+                    showMessage('Employee deleted successfully!', 'success');
+                    loadEmployees();
+                } else {
+                    showMessage('Error deleting employee', 'error');
+                }
+            } catch (error) {
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+
+        // Search by employee ID
+        async function searchByEmpId() {
+            const empid = document.getElementById('searchEmpId').value;
+            if (!empid) {
+                showMessage('Please enter an Employee ID', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/${empid}`);
+                if (response.ok) {
+                    const employee = await response.json();
+                    displaySearchResults([employee]);
+                } else {
+                    showMessage('Employee not found', 'error');
+                    document.getElementById('searchResults').innerHTML = '';
+                }
+            } catch (error) {
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+
+        // Search by name
+        async function searchByName() {
+            const fname = document.getElementById('searchFname').value;
+            if (!fname) {
+                showMessage('Please enter a first name', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/search/${fname}`);
+                if (response.ok) {
+                    const employees = await response.json();
+                    if (employees.length > 0) {
+                        displaySearchResults(employees);
+                    } else {
+                        showMessage('No employees found with that name', 'error');
+                        document.getElementById('searchResults').innerHTML = '';
+                    }
+                } else {
+                    showMessage('Error searching employees', 'error');
+                }
+            } catch (error) {
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+
+        // Display search results
+        function displaySearchResults(employees) {
+            let html = `
+                <table class="employee-table">
+                    <thead>
+                        <tr>
+                            <th>Employee ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Salary</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            employees.forEach(emp => {
+                html += `
+                    <tr>
+                        <td>${emp.empid}</td>
+                        <td>${emp.fname}</td>
+                        <td>${emp.lname}</td>
+                        <td>${emp.email}</td>
+                        <td>$${emp.salary.toLocaleString()}</td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table>';
+            document.getElementById('searchResults').innerHTML = html;
+        }
+
+        // Export to PDF
+        function exportToPDF() {
+            window.open(`${API_BASE}/export-to-pdf`, '_blank');
+        }
+
+        // Export to Excel
+        function exportToExcel() {
+            window.open(`${API_BASE}/export-to-excel`, '_blank');
+        }
+
+        // Load employees on page load
+        window.addEventListener('load', loadEmployees);
+    </script>
 </body>
 </html>

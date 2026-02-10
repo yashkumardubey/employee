@@ -1,5 +1,5 @@
 package com.employee;
-
+// just a comment 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
@@ -22,4 +22,3 @@ public class EmployeeManagementApplication extends SpringBootServletInitializer 
         return application.sources(EmployeeManagementApplication.class);
     }
 }
-

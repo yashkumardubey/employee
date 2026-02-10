@@ -7,6 +7,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Table(name = "employees")
 @Entity
@@ -14,10 +17,19 @@ public class Employee {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@NotBlank(message = "Employee ID is required")
+	@Size(min = 3, max = 20, message = "Employee ID must be between 3 and 20 characters")
     private String empid;
+    
+    @NotBlank(message = "Name is required")
+    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
     private String fname;
+    
     private Date dob;
     private Date doj;
+    
+    @Min(value = 0, message = "Salary must be positive")
     private int salary;
     private Integer reportsto;
     private Integer deptid;

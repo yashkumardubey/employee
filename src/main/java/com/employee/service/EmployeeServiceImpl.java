@@ -4,33 +4,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.employee.controller.EmployeeController;
 import com.employee.entity.Employee;
-import com.employee.entity.EmployeeClone;
 import com.employee.entity.EmployeeShadow;
-//import com.employee.entity.EmployeeShadow;
 import com.employee.exception.EmployeeNotFoundException;
 import com.employee.repository.EmployeeRepository;
 import com.employee.repository.EmployeeShadowRepo;
-//import com.employee.repository.EmployeeShadowRepo;
 import com.employee.response.HttpResponse;
 import com.employee.response.StandardResponse;
 
 import ch.qos.logback.classic.Logger;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
-@SuppressWarnings("unused")
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 	
@@ -52,14 +43,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
    
     
+    @SuppressWarnings("null")
     public StandardResponse addEmployee(Employee employee) {
-        Employee savedEmployee = employeeRepository.save(employee);
-        if (savedEmployee != null) {
-            return new StandardResponse("success", "Employee details added successfully");
-        } else {
-            return new StandardResponse("error", "Failed to add employee");
-        }
-    
+        employeeRepository.save(employee);
+        return new StandardResponse("success", "Employee details added successfully");
     }
     
 	
@@ -68,7 +55,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     
     @Override
     public Employee getEmployeeByEmpId(String empid) {
-        return employeeRepository.findByempid(empid);
+        return employeeRepository.findByEmpid(empid);
     }
     
     
@@ -111,7 +98,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     
   
     @Override
-    public ResponseEntity<?> getEmployeeIdAndFname() {
+    public ResponseEntity<?> getEmployeeIdAndFnameAsResponse() {
         List<Employee> empList = employeeRepository.findAll();
 
         if (empList.isEmpty()) {
@@ -130,6 +117,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             return HttpResponse.generateResponse("success", HttpStatus.OK, map);
         }
+    }
+
+    @Override
+    public List<Employee> getEmployeeIdAndFname() {
+        return employeeRepository.findAll();
     }
     
     
@@ -222,6 +214,21 @@ public class EmployeeServiceImpl implements EmployeeService {
     
     public List<Employee> getAllExcelEmployees() {
         return employeeRepository.findAll();
+    }
+    
+    
+    @Override
+    public List<Employee> getEmployeesByFname(String fname) {
+        List<Employee> employees = employeeRepository.findAll();
+        List<Employee> result = new ArrayList<>();
+        
+        for (Employee emp : employees) {
+            if (emp.getFname() != null && emp.getFname().equalsIgnoreCase(fname)) {
+                result.add(emp);
+            }
+        }
+        
+        return result;
     }
     
     
